@@ -52,3 +52,23 @@
 .product-card button:hover {
   background-color: #333;
 }
+
+.product-card .view-reviews-btn {
+  display: block;
+  width: 100%;
+  margin: 16px 0 0 0;
+  background: #3498db;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: 2px solid #217dbb;
+  border-radius: 6px;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.product-card .view-reviews-btn:hover {
+  background: #217dbb;
+  color: #fff;
+}

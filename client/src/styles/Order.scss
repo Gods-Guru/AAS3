@@ -1,0 +1,78 @@
+@use 'sass:color';
+
+.checkout-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  margin-top: 3rem;
+
+  .checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      textarea, input {
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+    }
+
+    .summary {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+
+      p {
+        margin: 0.5rem 0;
+      }
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: color.adjust(#3498db, $lightness: -10%);
+      }
+
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
+
+    .checkout-message {
+      padding: 1rem;
+      border-radius: 4px;
+      text-align: center;
+
+      &.success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      &.error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.customers-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+
+  @media (max-width: 900px) {
+    padding: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+
+    .customers-list {
+      grid-template-columns: 1fr;
+      gap: 0.7rem;
+    }
+
+    .customer-card {
+      padding: 0.7rem;
+    }
+  }
+}

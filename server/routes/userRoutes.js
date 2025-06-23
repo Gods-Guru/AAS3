@@ -9,6 +9,11 @@ const {
 } = require('../controllers/userController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
+// Logged-in user fetches their profile
+router.get('/profile', protect, async (req, res) => {
+  res.json(req.user);
+});
+
 // Logged-in user updates their profile
 router.put('/profile', protect, updateProfile);
 

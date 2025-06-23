@@ -25,9 +25,16 @@ const orderSchema = new mongoose.Schema(
       postalCode: String,
       country: String,
     },
-    totalPrice: {
+    total: {
       type: Number,
       required: true,
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
+    paidAt: {
+      type: Date,
     },
     isDelivered: {
       type: Boolean,
@@ -51,13 +58,35 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     discountCode: { 
-      type: String, default: null 
+      type: String,
+      default: null 
     },
     discountPercentage: { 
-      type: Number, default: 0 
+      type: Number,
+      default: 0 
     },
     discountAmount: { 
-      type: Number, default: 0 
+      type: Number,
+      default: 0 
+    },
+    subtotal: {
+      type: Number,
+      required: true,
+    },
+    shippingFee: {
+      type: Number,
+      required: true,
+    },
+    paymentResult: {
+      id: String,
+      status: String,
+      update_time: String,
+      email_address: String,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ['card', 'cod'],
+      default: 'card',
     },
   },
   { timestamps: true }

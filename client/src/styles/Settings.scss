@@ -1,0 +1,84 @@
+.settings-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0eaff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.settings-card {
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 8px 40px 0 rgba(80, 80, 180, 0.10);
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.settings-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #232946;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  font-weight: 600;
+  color: #232946;
+  font-size: 1.05rem;
+}
+
+.settings-input {
+  padding: 0.7rem 1rem;
+  border-radius: 0.7rem;
+  border: 1px solid #e5e7eb;
+  background: #f3f6fa;
+  font-size: 1rem;
+  color: #232946;
+}
+
+.settings-btn {
+  margin-top: 1.2rem;
+  width: 100%;
+  background: #232946;
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.9rem 0;
+  box-shadow: 0 2px 12px 0 rgba(80,80,180,0.08);
+  cursor: not-allowed;
+  opacity: 0.85;
+  transition: background 0.18s;
+}
+
+.settings-message {
+  padding: 0.7rem 1rem;
+  border-radius: 0.7rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+}
+.settings-message.success {
+  background: #e0fce0;
+  color: #15803d;
+  border: 1px solid #22c55e;
+}
+.settings-message.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #ef4444;
+}

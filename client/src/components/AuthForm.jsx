@@ -2,73 +2,94 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/AuthForm.scss';
+import axios from 'axios';
+import API_BASE_URL from '../api/config';
 
-const AuthForm = ({ type }) => {
+const AuthForm = ({ type, onClose }) => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
-  const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // New loading state
-  const [showSignup, setShowSignup] = useState(false); // New state to control signup modal
+  const [loading, setLoading] = useState(false);
 
-  const isSignup = type === 'signup';
+  const isSignup = type === 'signup' || type === 'register';
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleConfirmPasswordChange = (e) => { // New handler
+  const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true); // Start loading
+    setLoading(true);
 
-    // --- Signup Specific Validations ---
     if (isSignup) {
       if (formData.password !== confirmPassword) {
         setError("Passwords do not match.");
-        setLoading(false); // Stop loading on validation error
+        setLoading(false);
         return;
       }
-      // You might add more frontend validations here for name, email format etc.
-    }
-    // --- End Signup Specific Validations ---
 
-    try {
-      const endpoint = isSignup ? '/api/auth/register' : '/api/auth/login';
-      
-      // Conditionally send 'name' only for signup
-      const bodyToSend = isSignup
-        ? JSON.stringify({ email: formData.email, password: formData.password, name: formData.name })
-        : JSON.stringify({ email: formData.email, password: formData.password });
+      try {
+        await axios.post(`${API_BASE_URL}/auth/register`, {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        });
 
-      const res = await fetch(`http://localhost:5000${endpoint}`, { // Replace with process.env.REACT_APP_BACKEND_URL in production
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: bodyToSend,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        // Assuming backend sends { message: "Error details" }
-        throw new Error(data.message || 'Failed to process request.');
+        // ✅ Navigate to OTP verification
+        navigate('/verify-otp', { state: { email: formData.email } });
+      } catch (err) {
+        setError(err.response?.data?.message || 'Registration failed');
+      } finally {
+        setLoading(false);
       }
 
-      // Backend should ideally return a user object or token upon successful signup/login
-      // The `login` function from AuthContext will store this `data`
-      login(data);
-      navigate('/home');
-    } catch (err) {
-      setError(err.message);
-      console.error("AuthForm submission error:", err);
-    } finally {
-      setLoading(false); // Always stop loading
+      return;
+    }
+
+    // Login flow
+    if (type === 'login') {
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email, password: formData.password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Failed to process request.');
+        }
+
+        login(data.user, data.token); // Store in context
+
+        const lastPage = localStorage.getItem('lastPage');
+        if (data.user?.isFirstLogin) {
+          navigate('/user/welcome');
+        } else if (
+          lastPage &&
+          !['/login', '/signup', '/reset-password', '/'].includes(lastPage)
+        ) {
+          navigate(lastPage);
+        } else {
+          navigate('/user/home');
+        }
+
+        if (onClose) onClose();
+      } catch (err) {
+        setError(err.message);
+        console.error('AuthForm submission error:', err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -130,27 +151,46 @@ const AuthForm = ({ type }) => {
           {loading ? (isSignup ? 'Registering...' : 'Logging In...') : (isSignup ? 'Sign Up' : 'Login')}
         </button>
       </form>
+
       {!isSignup && (
         <div className="auth-links">
           <div className="forgot-password">
-            <a href="/forgotPassword" className="fp">
+            <a href="/forgot-password" className="fp">
               Forgot your password?
             </a>
           </div>
           <div className="signup-link">
             <span>Don't have an account?{' '}
-              <button type="button" className="open-signup-btn" onClick={() => setShowSignup(true)}>
+              <button
+                type="button"
+                className="open-signup-btn"
+                onClick={() => {
+                  navigate('/signup');
+                  if (onClose) onClose();
+                }}
+              >
                 Sign Up
               </button>
             </span>
           </div>
         </div>
       )}
-      {showSignup && (
-        <div className="signup-modal-overlay" onClick={() => setShowSignup(false)}>
-          <div className="signup-modal" onClick={e => e.stopPropagation()}>
-            <button className="close-modal" onClick={() => setShowSignup(false)}>&times;</button>
-            <AuthForm type="signup" />
+
+      {isSignup && (
+        <div className="auth-links">
+          <div className="login-link">
+            <span>Already have an account?{' '}
+              <button
+                type="button"
+                className="open-login-btn"
+                onClick={() => {
+                  navigate('/login');
+                  if (onClose) onClose();
+                }}
+              >
+                Login
+              </button>
+            </span>
           </div>
         </div>
       )}

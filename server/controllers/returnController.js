@@ -1,92 +1,151 @@
+const asyncHandler = require('express-async-handler');
 const ReturnRequest = require('../models/returnRequest');
 const Order = require('../models/Order');
+const Product = require('../models/Product');
+const sendEmail = require('../utils/sendEmail');
+const User = require('../models/User');
 
-// USER: Request a return
-exports.createReturnRequest = async (req, res) => {
-  const { orderId, reason } = req.body;
-
+// @desc    Create new return request
+// @route   POST /api/returns
+// @access  Private (User)
+exports.createReturnRequest = asyncHandler(async (req, res) => {
   try {
-    const existingOrder = await Order.findById(orderId);
-    if (!existingOrder || existingOrder.user.toString() !== req.user.id) {
-      return res.status(404).json({ message: 'Order not found or unauthorized.' });
+    const { orderId, items, reason, description, refundAmount } = req.body;
+    console.log('Create Return Payload:', req.body);
+    const order = await Order.findById(orderId);
+    if (!order) {
+      res.status(404);
+      throw new Error('Order not found');
     }
-
-    const request = new ReturnRequest({
+    // Ensure refundAmount is set
+    const finalRefundAmount = typeof refundAmount === 'number' ? refundAmount : order.totalPrice;
+    const returnRequest = await ReturnRequest.create({
       order: orderId,
-      user: req.user.id,
-      reason
+      user: req.user._id,
+      items,
+      reason,
+      description,
+      refundAmount: finalRefundAmount,
     });
 
+    res.status(201).json(returnRequest);
+  } catch (err) {
+    console.error('Error in createReturnRequest:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
+  }
+});
+
+// @desc    Get all return requests (Admin)
+// @route   GET /api/returns
+// @access  Private/Admin
+exports.getAllReturns = asyncHandler(async (req, res) => {
+  const returns = await ReturnRequest.find()
+    .populate('user', 'name email')
+    .populate('order', '_id createdAt totalPrice')
+    .sort({ createdAt: -1 });
+
+  res.json(returns);
+});
+
+// @desc    Get user return requests
+// @route   GET /api/returns/mine
+// @access  Private
+exports.getMyReturns = asyncHandler(async (req, res) => {
+  const returns = await ReturnRequest.find({ user: req.user._id }).sort({ createdAt: -1 });
+  res.json(returns);
+});
+
+// @desc    Update return status (Admin)
+// @route   PATCH /api/returns/:id/status
+// @access  Private/Admin
+exports.updateReturnStatus = asyncHandler(async (req, res) => {
+  const { status, adminNote } = req.body;
+
+  const request = await ReturnRequest.findById(req.params.id);
+  if (!request) {
+    res.status(404);
+    throw new Error('Return request not found');
+  }
+
+  request.status = status || request.status;
+  if (adminNote) request.adminNote = adminNote;
+
+  await request.save();
+  res.json({ message: 'Return status updated', request });
+});
+
+// @desc    Mark return as refunded
+// @route   PATCH /api/returns/:id/refund
+// @access  Private/Admin
+exports.markAsRefunded = asyncHandler(async (req, res) => {
+  try {
+    const request = await ReturnRequest.findById(req.params.id);
+    if (!request) {
+      res.status(404);
+      throw new Error('Return request not found');
+    }
+
+    if (!request.refundAmount && request.orderItem) {
+      request.refundAmount = request.orderItem.price * request.orderItem.quantity;
+    }
+
+    request.isRefunded = true;
+    request.status = 'Refunded';
+    request.refundIssuedAt = new Date();
     await request.save();
-    res.status(201).json({ message: 'Return request submitted.', request });
 
+    // Send refund email to user
+    const user = await User.findById(request.user);
+    if (user && user.email) {
+      await sendEmail({
+        to: user.email,
+        subject: 'Your refund has been processed',
+        html: `<p>Dear ${user.name || 'customer'},<br>Your return request for order #${request.order} has been approved and your refund of $${request.refundAmount} has been processed.<br>Thank you for shopping with us!</p>`
+      });
+    }
+
+    res.json({ message: 'Return marked as refunded' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in markAsRefunded:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
   }
-};
+});
 
-// ADMIN: Get all return requests
-exports.getAllReturns = async (req, res) => {
-  try {
-    const returns = await ReturnRequest.find().populate('order').populate('user');
-    res.status(200).json(returns);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+// @desc    Mark return as restocked
+// @route   PATCH /api/returns/:id/restock
+// @access  Private/Admin
+exports.markAsRestocked = asyncHandler(async (req, res) => {
+  const request = await ReturnRequest.findById(req.params.id);
+  if (!request) {
+    res.status(404);
+    throw new Error('Return request not found');
   }
-};
 
-exports.updateReturnStatus = async (req, res) => {
-  const { status, responseMessage } = req.body;
+  request.restocked = true;
+  await request.save();
 
-  try {
-    const returnRequest = await ReturnRequest.findById(req.params.id);
-
-    if (!returnRequest) {
-      return res.status(404).json({ message: 'Return request not found' });
+  // Optional: Adjust stock count in product model
+  for (const item of request.items) {
+    const product = await Product.findById(item.product);
+    if (product) {
+      product.countInStock += item.qty;
+      await product.save();
     }
-
-    returnRequest.status = status;
-    returnRequest.responseMessage = responseMessage || returnRequest.responseMessage;
-
-    // Add to history
-    returnRequest.statusHistory.push({ status });
-
-    await returnRequest.save();
-
-    res.status(200).json({ message: 'Return status updated successfully', returnRequest });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to update return status', error: error.message });
   }
-};
 
-exports.markOrderAsRefunded = async (req, res) => {
-  try {
-    const order = await Order.findById(req.params.id);
+  res.json({ message: 'Items restocked successfully' });
+});
 
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
+// @desc    Get returns for a specific user (Admin)
+// @route   GET /api/returns/user/:userId
+// @access  Private/Admin
+exports.getUserReturns = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
 
-    if (order.refunded) {
-      return res.status(400).json({ message: 'Order is already marked as refunded' });
-    }
+  const returns = await ReturnRequest.find({ user: userId })
+    .populate('order', '_id totalPrice createdAt')
+    .populate('items.product', 'name')
+    .sort({ createdAt: -1 });
 
-    // Restock each product in the order
-    for (const item of order.orderItems) {
-      const product = await Product.findById(item.product);
-      if (product) {
-        product.inStock += item.qty;
-        await product.save();
-      }
-    }
-
-    order.refunded = true;
-    order.status = 'Refunded';
-    await order.save();
-
-    res.status(200).json({ message: 'Order marked as refunded and stock updated' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error processing refund', error: error.message });
-  }
-};
+  res.json(returns);
+});

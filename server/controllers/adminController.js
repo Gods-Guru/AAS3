@@ -7,7 +7,7 @@ const Discount = require('../models/Discounts');
 const getAdminAnalytics = async (req, res) => {
   const totalSalesData = await Order.aggregate([
     { $match: { isPaid: true } },
-    { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+    { $group: { _id: null, total: { $sum: '$total' } } },
   ]);
   const totalSales = totalSalesData[0]?.total || 0;
 
@@ -58,7 +58,7 @@ const getOrderAnalytics = async (req, res) => {
     const pendingOrders = orders.filter(order => order.status === 'Pending').length;
     const canceledOrders = orders.filter(order => order.status === 'Canceled').length;
 
-    const totalRevenue = orders.reduce((acc, curr) => acc + curr.totalPrice, 0);
+    const totalRevenue = orders.reduce((acc, curr) => acc + (curr.total || 0), 0);
 
     res.status(200).json({
       totalOrders,
@@ -72,8 +72,68 @@ const getOrderAnalytics = async (req, res) => {
   }
 };
 
+const getAllAdminStats = async (req, res) => {
+  try {
+    // Total Sales
+    const totalSalesData = await Order.aggregate([
+      { $match: { isPaid: true } },
+      { $group: { _id: null, total: { $sum: '$total' } } },
+    ]);
+    const totalSales = totalSalesData[0]?.total || 0;
+
+    // Orders
+    const orders = await Order.find();
+    const totalOrders = orders.length;
+    const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
+    const pendingOrders = orders.filter(o => o.status === 'Pending').length;
+    const canceledOrders = orders.filter(o => o.status === 'Canceled').length;
+    const totalRevenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+    // Discounts
+    const discounts = await Discount.find();
+    const totalCodes = discounts.length;
+    const activeCodes = discounts.filter(d => d.active).length;
+    const usedCodes = discounts.filter(d => d.usedCount > 0).length;
+    const totalUses = discounts.reduce((acc, curr) => acc + curr.usedCount, 0);
+
+    // Other stats
+    const totalCustomers = await User.countDocuments({ isAdmin: false });
+    const productsInStock = await Product.countDocuments({ inStock: { $gt: 0 } });
+    const totalProducts = await Product.countDocuments();
+    const returnRequests = await Return.countDocuments();
+
+    res.status(200).json({
+      sales: {
+        totalSales,
+        totalRevenue
+      },
+      orders: {
+        totalOrders,
+        deliveredOrders,
+        pendingOrders,
+        canceledOrders
+      },
+      discounts: {
+        totalCodes,
+        activeCodes,
+        usedCodes,
+        totalUses
+      },
+      other: {
+        totalCustomers,
+        productsInStock,
+        totalProducts,
+        returnRequests
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch admin stats', error: error.message });
+  }
+};
+
 module.exports = {
   getAdminAnalytics,
   getDiscountAnalytics,
-  getOrderAnalytics
+  getOrderAnalytics,
+  getAllAdminStats
 };

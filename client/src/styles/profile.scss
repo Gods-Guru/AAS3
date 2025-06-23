@@ -1,0 +1,197 @@
+$primary: #4361ee;
+$primary-light: #e0e7ff;
+$secondary: #3f37c9;
+$error: #ef233c;
+$success: #4cc9f0;
+$warning: #f8961e;
+$white: #ffffff;
+$light-bg: #f8f9fa;
+$border-color: #e9ecef;
+$light-text: #adb5bd;
+$medium-text: #6c757d;
+$dark-text: #212529;
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+
+.profile {
+  &-layout {
+    display: flex;
+    justify-content: center;
+    min-height: calc(100vh - 4rem);
+    padding: 2rem;
+    background-color: $light-bg;
+  }
+
+  &-main {
+    width: 100%;
+    max-width: 600px;
+    background: $white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      padding: 1.5rem;
+    }
+  }
+
+  &-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    &-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid $primary-light;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      color: $dark-text;
+      margin: 0.5rem 0;
+    }
+
+    p {
+      color: $medium-text;
+      margin: 0.25rem 0;
+      line-height: 1.5;
+      max-width: 80%;
+
+      &:last-of-type {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: $dark-text;
+
+    input, textarea {
+      padding: 0.75rem 1rem;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  &-primary {
+    background-color: $primary;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: darken($primary, 8%);
+    }
+
+    &:disabled {
+      background-color: lighten($primary, 20%);
+      cursor: not-allowed;
+    }
+  }
+
+  &-secondary {
+    background-color: white;
+    color: $primary;
+    border: 1px solid $primary;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: rgba($primary, 0.05);
+    }
+  }
+
+  &-danger {
+    background-color: $white;
+    color: $error;
+    border: 1px solid $error;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: rgba($error, 0.05);
+    }
+  }
+}
+
+// Loading and error states
+.profile-main {
+  &.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    color: $medium-text;
+  }
+
+  &.error {
+    color: $error;
+    padding: 2rem;
+    text-align: center;
+  }
+}

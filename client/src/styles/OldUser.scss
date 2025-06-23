@@ -1,0 +1,142 @@
+.user-home {
+  // margin-top: 3rem;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 0 1.5rem;
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+.user-home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.search-bar {
+  flex: 1;
+  margin: 0 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.header-icons span {
+  margin-left: 1rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.welcome-strip {
+  margin-top: 1rem;
+}
+
+.welcome-strip h2 {
+  margin-bottom: 0.2rem;
+}
+
+.mini-stats {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  background-color: #f1f1f1;
+}
+
+.featured-section {
+  margin-bottom: 2rem;
+}
+
+.featured-section h3 {
+  margin-bottom: 1rem;
+}
+
+.product-grid {
+  display: flex;
+  gap: 1rem;
+}
+
+.product-card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 100px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.view-all {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.promo-banner {
+  background-color: #ffecd1;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.promo-banner h4 {
+  margin-bottom: 0.5rem;
+}
+
+.promo-banner button {
+  background-color: #222;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.help-strip {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+}
+
+.help-strip span {
+  color: #0077cc;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .user-home { padding: 0 0.5rem; }
+  .quick-links { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+}
+
+@media (max-width: 600px) {
+  .user-home { padding: 0 0.2rem; }
+  .quick-links { grid-template-columns: 1fr; gap: 0.5rem; }
+  .card { padding: 0.7rem; }
+}

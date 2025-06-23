@@ -3,21 +3,33 @@ const router = express.Router();
 const {
   createReturnRequest,
   getAllReturns,
+  getMyReturns,
   updateReturnStatus,
-  markOrderAsRefunded
+  markAsRefunded,
+  markAsRestocked,
+  getUserReturns
 } = require('../controllers/returnController');
-
 const { protect, admin } = require('../middleware/authMiddleware');
 
-// User submits return
+// User: Submit a return request
 router.post('/', protect, createReturnRequest);
 
-// Admin views all returns
+// User: View their return history
+router.get('/mine', protect, getMyReturns);
+
+// Admin: View all return requests
 router.get('/', protect, admin, getAllReturns);
 
-router.put('/orders/:id/refund', protect, admin, markOrderAsRefunded);
+// Admin: Update status of a return request
+router.patch('/:id/status', protect, admin, updateReturnStatus);
 
-// Admin updates a return request
-router.put('/:id/status', protect, admin, updateReturnStatus);
+// Admin: Mark as refunded
+router.patch('/:id/refund', protect, admin, markAsRefunded);
+
+// Admin: Mark as restocked
+router.patch('/:id/restock', protect, admin, markAsRestocked);
+
+// Admin: Get returns for a specific user
+router.get('/user/:userId', protect, admin, getUserReturns);
 
 module.exports = router;

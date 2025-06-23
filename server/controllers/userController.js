@@ -1,15 +1,36 @@
 const User = require('../models/User');
+const Order = require('../models/Order');
+const Product = require('../models/Product');
+const ReturnRequest = require('../models/returnRequest');
 
-// Admin: Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password');
-    res.status(200).json(users);
+    const sortBy = req.query.sortBy || 'createdAt';
+    const order = req.query.order === 'asc' ? 1 : -1;
+    const limit = parseInt(req.query.limit) || 0;
+
+    const users = await User.find({ isAdmin: false })
+      .sort({ [sortBy]: order })
+      .limit(limit)
+      .select('-password');
+
+    const enriched = await Promise.all(users.map(async (user) => {
+      const orderCount = await Order.countDocuments({ user: user._id });
+      const returnCount = await ReturnRequest.countDocuments({ user: user._id });
+
+      return {
+        ...user._doc,
+        orderCount,
+        returnCount
+      };
+    }));
+
+    res.status(200).json(enriched);
   } catch (error) {
+    console.error('Get all users failed:', error); // add this line for logging
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-
 // Admin: Get single user
 exports.getUserById = async (req, res) => {
   try {
@@ -24,13 +45,15 @@ exports.getUserById = async (req, res) => {
 // User: Update own profile
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, bio, profilePicture } = req.body;
 
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     user.name = name || user.name;
     user.email = email || user.email;
+    user.bio = bio !== undefined ? bio : user.bio;
+    user.profilePicture = profilePicture !== undefined ? profilePicture : user.profilePicture;
 
     const updatedUser = await user.save();
     res.status(200).json({
@@ -40,6 +63,8 @@ exports.updateProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        bio: updatedUser.bio,
+        profilePicture: updatedUser.profilePicture,
       },
     });
   } catch (error) {

@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
       required: true
     },
     image: {
-      type: String, // We'll assume it's a URL for now
+      type: String, // We'll assume it's a URL for now -- update -- I changed it to accept images too using cloudinary :)
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,

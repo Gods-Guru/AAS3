@@ -3,7 +3,15 @@ const Product = require('../models/Product');
 
 exports.createReview = async (req, res) => {
   try {
-    const { rating, comment, productId } = req.body;
+    // Support productId from either URL param or body
+    const productId = req.params.productId || req.body.productId;
+    const { rating, comment } = req.body;
+
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
 
     const reviewExists = await Review.findOne({
       user: req.user._id,

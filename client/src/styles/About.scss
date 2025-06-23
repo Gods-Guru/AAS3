@@ -1,0 +1,291 @@
+.about-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  section {
+    margin-bottom: 4rem;
+  }
+
+  h1, h2, h3 {
+    color: #2c3e50;
+  }
+
+  .about-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/blue-car.png');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 3rem;
+
+    .hero-content {
+      max-width: 800px;
+      padding: 2rem;
+
+      h1 {
+        color: white;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+
+    .stat-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      h3 {
+        font-size: 2.5rem;
+        color: #3498db;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #7f8c8d;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .about-tabs {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .tab-buttons {
+      display: flex;
+      border-bottom: 1px solid #eee;
+
+      button {
+        flex: 1;
+        padding: 1rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #7f8c8d;
+        transition: all 0.3s;
+
+        &.active {
+          color: #3498db;
+          border-bottom: 3px solid #3498db;
+        }
+
+        &:hover:not(.active) {
+          background: #f8f9fa;
+        }
+      }
+    }
+
+    .tab-content {
+      padding: 2rem;
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+      }
+
+      p {
+        line-height: 1.8;
+        margin-bottom: 1rem;
+      }
+
+      .values-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+
+        li {
+          background: #f8f9fa;
+          padding: 1.5rem;
+          border-radius: 8px;
+
+          h3 {
+            color: #3498db;
+            margin-top: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .team-section {
+    text-align: center;
+
+    h2 {
+      margin-bottom: 2rem;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+
+      .team-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
+
+        .team-image-container {
+          height: 250px;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+
+        h3 {
+          margin: 1rem 0 0.5rem;
+        }
+
+        .role {
+          color: #7f8c8d;
+          padding: 0 1rem 1.5rem;
+        }
+      }
+    }
+  }
+
+  .cta-section {
+    text-align: center;
+    background: linear-gradient(135deg, #3498db, #2c3e50);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 8px;
+
+    h2 {
+      color: white;
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.75rem 2rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+
+      &.primary-cta {
+        background: white;
+        color: #3498db;
+
+        &:hover {
+          background: #f8f9fa;
+          transform: translateY(-2px);
+        }
+      }
+
+      &.secondary-cta {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    .about-hero {
+      height: 400px;
+
+      .hero-content {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .about-tabs {
+      .tab-buttons {
+        flex-direction: column;
+
+        button {
+          text-align: left;
+          padding: 1rem 1.5rem;
+          border-bottom: 1px solid #eee;
+
+          &.active {
+            border-bottom: 3px solid #3498db;
+            border-left: none;
+          }
+        }
+      }
+    }
+
+    .cta-section {
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+
+        button {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+    }
+  }
+}

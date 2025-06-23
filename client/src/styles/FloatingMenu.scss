@@ -1,0 +1,144 @@
+* {
+  // border: 1px solid #000;
+}
+
+.cart-alert {
+  margin-top: 1.2rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.7rem;
+  font-weight: 600;
+  font-size: 1rem;
+  background: #d4edda;
+  color: #155724;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #b7dfc5;
+  animation: fadeIn 0.2s;
+}
+
+.cart-alert.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.floating-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.floating-menu {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 340px;
+  max-width: 95vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.floating-menu img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 0.7rem;
+  margin-bottom: 1rem;
+  background: #f8f8f8;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #2e2e2e;
+}
+
+.floating-menu h3 {
+  margin: 0.5rem 0 0.2rem 0;
+  font-size: 1.3rem;
+  color: #2e2e2e;
+  font-weight: 700;
+}
+
+.price {
+  color: #e57373;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.floating-menu p {
+  color: #444;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+.quantity-picker {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  gap: 0.5rem;
+}
+
+.quantity-picker label {
+  font-weight: 500;
+  color: #2e2e2e;
+}
+
+.quantity-picker input[type="number"] {
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 1rem;
+  width: 60px;
+  margin-left: 0.5rem;
+}
+
+.add-btn {
+  background-color: #f8c6c8;
+  color: #2e2e2e;
+  border: none;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  margin-top: 0.5rem;
+}
+
+.add-btn:hover {
+  background-color: #f5a7aa;
+}

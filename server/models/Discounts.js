@@ -21,7 +21,7 @@ const discountSchema = mongoose.Schema(
     },
     usageLimit: {
       type: Number,
-      default: 0, // 0 means unlimited usage
+      default: 0,
     },
     usedCount: {
       type: Number,

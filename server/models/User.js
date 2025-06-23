@@ -30,6 +30,28 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        wishlist: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product',
+            },
+        ],
+        resetPasswordToken: String,
+        resetPasswordExpire: Date,
+        otp: String,
+        otpExpiresAt: Date,
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+        bio: {
+            type: String,
+            default: '',
+        },
+        profilePicture: {
+            type: String,
+            default: '',
+        },
     },
     { timestamps: true }
 );

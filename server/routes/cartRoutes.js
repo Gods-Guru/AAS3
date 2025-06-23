@@ -5,7 +5,8 @@ const {
   getCart,
   removeFromCart,
   clearCart,
-  updateCartItem
+  updateCartItem,
+  cleanupCart
 } = require('../controllers/cartController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -15,5 +16,6 @@ router.get('/', protect, getCart); // Get cart
 router.delete('/clear', protect, clearCart); // Clear cart
 router.delete('/:productId', protect, removeFromCart); // Remove item
 router.put('/update/:productId', protect, updateCartItem);
+router.get('/cleanup', protect, cleanupCart); // Cleanup cart
 
 module.exports = router;

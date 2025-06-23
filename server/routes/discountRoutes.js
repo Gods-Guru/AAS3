@@ -7,7 +7,7 @@ router.post('/', protect, admin, createDiscount); // Admin-only access
 router.get('/', protect, admin, getDiscounts); // Admin-only access
 router.put('/:id', protect, admin, updateDiscount); // Admin-only access
 router.delete('/:id/delete', protect, admin, deleteDiscount); // Admin-only access
-router.put('/:id/toggle', protect, admin, toggleDiscountActivation);
+router.put('/:id/toggle', protect, admin, toggleDiscountActivation); //Admin-only access
 
 
 module.exports = router;

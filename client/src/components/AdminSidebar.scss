@@ -1,0 +1,50 @@
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100vh;
+  background: #2c3e50;
+  color: #fff;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.07);
+  z-index: 1000;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-sidebar li {
+  margin-bottom: 1.5rem;
+}
+
+.admin-sidebar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: block;
+  transition: background 0.2s;
+}
+
+.admin-sidebar a.active, .admin-sidebar a:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.admin-content-with-sidebar {
+  margin-left: 20%;
+  padding: 2rem 2rem 2rem 0;
+  min-height: 100vh;
+  background: #f8f9fa;
+}

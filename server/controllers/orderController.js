@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
 const Discount = require('../models/Discounts');
+const Product = require('../models/Product');
 
 // @desc    Update order status
 // @route   PATCH /api/orders/:id/status
@@ -56,65 +57,71 @@ exports.getOrderStatus = async (req, res) => {
 // Create an order
 exports.createOrder = async (req, res) => {
   try {
-    const {
-      orderItems,
-      shippingAddress,
-      paymentMethod,
-      totalPrice,
-      discountCode // optional
-    } = req.body;
-
-    if (!orderItems || orderItems.length === 0) {
-      return res.status(400).json({ message: 'No order items' });
+    const { items, shippingAddress, discountCode, paymentMethod = 'card', paymentInfo } = req.body;
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "No order items provided" });
     }
-
-    let finalPrice = totalPrice;
-    let appliedDiscountCode = null;
-    let discountPercentage = 0;
+    const userId = req.user.id;
+    let subtotal = 0;
+    const orderItems = [];
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      if (!product) return res.status(404).json({ message: "Product not found" });
+      if (product.inStock < item.quantity) {
+        return res.status(400).json({ message: `Not enough stock for ${product.name}` });
+      }
+      // Decrement stock
+      product.inStock -= item.quantity;
+      if (product.inStock === 0) {
+        product.status = 'out of stock';
+      }
+      await product.save();
+      const itemSubtotal = product.price * item.quantity;
+      subtotal += itemSubtotal;
+      orderItems.push({
+        product: product._id,
+        name: product.name,
+        qty: item.quantity,
+        price: product.price,
+      });
+    }
     let discountAmount = 0;
-
+    let discountPercentage = 0;
     if (discountCode) {
-      const discount = await Discount.findOne({ code: discountCode.toUpperCase(), active: true });
-
-      if (!discount) {
-        return res.status(400).json({ message: 'Invalid or inactive discount code' });
-      }
-
-      if (discount.expiryDate < new Date()) {
-        return res.status(400).json({ message: 'Discount code has expired' });
-      }
-
-      if (discount.usageLimit !== 0 && discount.usedCount >= discount.usageLimit) {
-        return res.status(400).json({ message: 'Discount code has reached its usage limit' });
-      }
-
-      // Apply discount
+      const discount = await Discount.findOne({ code: discountCode });
+      if (!discount) return res.status(400).json({ message: "Invalid discount code" });
       discountPercentage = discount.discountPercentage;
-      discountAmount = totalPrice * (discountPercentage / 100);
-      finalPrice = totalPrice - discountAmount;
-      appliedDiscountCode = discount.code;
-
-      // Update usage count
-      discount.usedCount += 1;
+      discountAmount = (discount.discountPercentage / 100) * subtotal;
+      // Increment usedCount
+      discount.usedCount = (discount.usedCount || 0) + 1;
       await discount.save();
     }
-
-    const order = new Order({
-      user: req.user._id,
+    const shippingFee = 0.04 * subtotal;
+    const total = subtotal - discountAmount + shippingFee;
+    const newOrder = await Order.create({
+      user: userId,
       orderItems,
       shippingAddress,
-      paymentMethod,
-      totalPrice: finalPrice,
-      discountCode: appliedDiscountCode,
-      discountPercentage,
+      discountCode,
       discountAmount,
+      discountPercentage,
+      shippingFee,
+      subtotal,
+      total,
+      status: "Pending",
+      statusHistory: [{ status: "Pending" }],
+      paymentMethod,
+      paymentResult: paymentInfo || undefined,
+      isPaid: paymentMethod === 'card',
+      paidAt: paymentMethod === 'card' ? Date.now() : undefined,
     });
-
-    const createdOrder = await order.save();
-
-    res.status(201).json(createdOrder);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to create order', error: error.message });
+    res.status(201).json({
+      message: "Order created successfully",
+      order: newOrder,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -158,15 +165,15 @@ exports.getOrdersByUser = async (req, res) => {
 exports.updateOrderToPaid = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-
     if (!order) return res.status(404).json({ message: 'Order not found' });
-
+    // Only allow marking as paid if payment method is 'cod' (cash on delivery)
+    if (order.paymentMethod !== 'cod') {
+      return res.status(400).json({ message: 'Order is not eligible for manual payment marking.' });
+    }
     order.isPaid = true;
     order.paidAt = Date.now();
-    order.paymentResult = req.body.paymentResult; // e.g. from PayPal
-
+    order.paymentResult = req.body.paymentResult || { status: 'PAID_ON_DELIVERY' };
     const updatedOrder = await order.save();
-
     res.json(updatedOrder);
   } catch (error) {
     res.status(500).json({ message: 'Failed to update order', error: error.message });
@@ -214,5 +221,33 @@ exports.getAllOrders = async (req, res) => {
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch orders', error: error.message });
+  }
+};
+
+// Cancel order and restock products
+exports.cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    if (order.status === 'Cancelled') {
+      return res.status(400).json({ message: 'Order already cancelled' });
+    }
+    // Restock each product
+    for (const item of order.orderItems) {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.inStock += item.qty;
+        if (product.inStock > 0 && product.status === 'out of stock') {
+          product.status = 'in stock';
+        }
+        await product.save();
+      }
+    }
+    order.status = 'Cancelled';
+    order.statusHistory.push({ status: 'Cancelled' });
+    await order.save();
+    res.status(200).json({ message: 'Order cancelled and products restocked', order });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to cancel order', error: error.message });
   }
 };

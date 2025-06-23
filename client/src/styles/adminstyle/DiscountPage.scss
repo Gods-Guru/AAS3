@@ -1,0 +1,169 @@
+.admin-discounts {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+  }
+
+  .message {
+    text-align: center;
+    color: #007a5c;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .discount-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+
+    input,
+    button {
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input {
+      flex: 1 1 180px;
+    }
+
+    button {
+      background-color: #007a5c;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s ease;
+
+      &:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: #005f45;
+      }
+    }
+  }
+
+  .discount-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .discount-card {
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    padding: 1.2rem;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      color: #222;
+    }
+
+    p {
+      margin: 0.2rem 0;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    .actions {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s ease;
+
+        &:nth-child(1) {
+          background-color: #1976d2;
+          color: white;
+
+          &:hover {
+            background-color: #0d47a1;
+          }
+        }
+
+        &:nth-child(2) {
+          background-color: #fbc02d;
+          color: black;
+
+          &:hover {
+            background-color: #f9a825;
+          }
+        }
+
+        &.danger {
+          background-color: #e53935;
+          color: white;
+
+          &:hover {
+            background-color: #b71c1c;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .discount-list {
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .discount-form {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
+
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    .discount-list {
+      grid-template-columns: 1fr;
+      gap: 0.7rem;
+    }
+
+    .discount-form {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .discount-card {
+      padding: 0.7rem;
+    }
+  }
+}

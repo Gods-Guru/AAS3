@@ -1,0 +1,12 @@
+.product-card, .wishlist-card, .favourites-card-wrapper, .order-card, .cart-item-card {
+  max-width: 320px;
+  min-width: 220px;
+  flex: 1 1 220px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  transition: 0.3s ease;
+  position: relative;
+}

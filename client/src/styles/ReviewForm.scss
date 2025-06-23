@@ -1,0 +1,99 @@
+// ReviewForm.scss
+
+.review-form {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-direction: row-reverse; // Makes 5 stars appear first
+
+    input {
+      display: none;
+
+      &:checked ~ label,
+      &:hover ~ label,
+      &label:hover {
+        color: #f59e0b; // amber-500
+      }
+    }
+
+    label {
+      font-size: 2rem;
+      color: #e2e8f0; // gray-200
+      cursor: pointer;
+      transition: color 0.2s ease;
+      padding: 0 0.25rem;
+
+      &:hover,
+      &:hover ~ label {
+        color: #fbbf24; // amber-400
+      }
+    }
+  }
+
+  &__comment-label {
+    display: block;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0.5rem;
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: #93c5fd; // blue-300
+      box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.3);
+    }
+  }
+
+  &__submit {
+    background-color: #2563eb; // blue-600
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+    width: 100%;
+
+    &:hover {
+      background-color: #1d4ed8; // blue-700
+    }
+
+    &:disabled {
+      background-color: #93c5fd; // blue-300
+      cursor: not-allowed;
+    }
+  }
+
+  &__error {
+    color: #dc2626; // red-600
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+}

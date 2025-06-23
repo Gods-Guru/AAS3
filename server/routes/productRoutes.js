@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const {
   createProduct,
   getAllProducts,
@@ -14,8 +16,9 @@ router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 
 // Admin Routes
-router.post('/', protect, admin, createProduct);
-router.put('/:id', protect, admin, updateProduct);
+router.post('/', upload.single('image'), protect, admin, createProduct);
+router.put('/:id', upload.single('image'), protect, admin, updateProduct);
 router.delete('/:id', protect, admin, deleteProduct);
+
 
 module.exports = router;
