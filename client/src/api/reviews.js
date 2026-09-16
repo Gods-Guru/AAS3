@@ -1,6 +1,6 @@
 // src/api/reviews.js
 // Use window.env or fallback to localhost for browser compatibility
-const API_URL = (window?.env?.REACT_APP_BACKEND_URL) || 'http://localhost:5000/api';
+const API_URL = (window?.env?.REACT_APP_BACKEND_URL) || 'http://localhost:5002/api';
 
 export async function fetchReviews(productId) {
   const res = await fetch(`${API_URL}/reviews/${productId}`);

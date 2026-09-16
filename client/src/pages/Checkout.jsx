@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { validateDiscountCode } from '../services/discountService';
 import '../styles/CheckoutPage.scss';
 
-const API_BASE_URL = 'http://localhost:5000/api'; // Ensure this is the correct base URL for your API
+const API_BASE_URL = 'http://localhost:5002/api'; // Ensure this is the correct base URL for your API
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const CheckoutPage = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/cart', {
+        const res = await axios.get('http://localhost:5002/api/cart', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setBackendCartItems(res.data.items || []);

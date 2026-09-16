@@ -30,7 +30,7 @@ export const CartProvider = ({ children }) => {
         return;
       }
       
-      const res = await axios.get('http://localhost:5000/api/cart', {
+      const res = await axios.get('http://localhost:5002/api/cart', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -78,7 +78,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/cart', 
+      await axios.post('http://localhost:5002/api/cart',
         { productId: product._id, quantity },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
@@ -99,7 +99,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      await axios.delete(`http://localhost:5000/api/cart/${productId}`, {
+      await axios.delete(`http://localhost:5002/api/cart/${productId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       await fetchCart();
@@ -132,7 +132,7 @@ export const CartProvider = ({ children }) => {
       return item;
     }));
     try {
-      await axios.put(`http://localhost:5000/api/cart/update/${productId}`, 
+      await axios.put(`http://localhost:5002/api/cart/update/${productId}`,
         { quantity },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
@@ -154,7 +154,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      await axios.delete('http://localhost:5000/api/cart/clear', {
+      await axios.delete('http://localhost:5002/api/cart/clear', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       await fetchCart();

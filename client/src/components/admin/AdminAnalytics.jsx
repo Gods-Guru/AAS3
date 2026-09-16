@@ -17,7 +17,7 @@ const AdminAnalytics = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/analytics', {
+        const { data } = await axios.get('http://localhost:5002/api/analytics', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

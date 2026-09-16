@@ -15,7 +15,7 @@ const SettingsPage = () => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:5000/api/users/me', {
+        const res = await axios.get('http://localhost:5002/api/users/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data);
@@ -40,14 +40,14 @@ const SettingsPage = () => {
     try {
       // Update profile (username/email)
       await axios.put(
-        'http://localhost:5000/api/users/update-profile',
+        'http://localhost:5002/api/users/update-profile',
         { username: form.username, email: form.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Change password if provided
       if (form.password) {
         await axios.post(
-          'http://localhost:5000/api/users/change-password',
+          'http://localhost:5002/api/users/change-password',
           { password: form.password },
           { headers: { Authorization: `Bearer ${token}` } }
         );

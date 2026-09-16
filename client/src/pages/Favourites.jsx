@@ -30,7 +30,7 @@ const FavouritesPage = () => {
           setManualFavourites([]);
         } else {
           // Fetch all products and filter
-          const res = await axios.get('http://localhost:5000/api/products');
+          const res = await axios.get('http://localhost:5002/api/products');
           const allProducts = Array.isArray(res.data)
             ? res.data
             : res.data.products || [];
@@ -41,10 +41,10 @@ const FavouritesPage = () => {
         return;
       }
       const [manualRes, viewedRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/favourites', {
+        axios.get('http://localhost:5002/api/favourites', {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:5000/api/views', {
+        axios.get('http://localhost:5002/api/views', {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -96,7 +96,7 @@ const FavouritesPage = () => {
       return;
     }
     try {
-      await axios.delete(`http://localhost:5000/api/favourites/${productId}`, {
+      await axios.delete(`http://localhost:5002/api/favourites/${productId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setManualFavourites((prev) => prev.filter((item) => (item._id || item.id) !== productId));
@@ -139,7 +139,7 @@ const FavouritesPage = () => {
     // Track the view in the backend
     const token = localStorage.getItem('token');
     axios.post(
-      `http://localhost:5000/api/views/${product._id}`,
+      `http://localhost:5002/api/views/${product._id}`,
       {},
       token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
     ).then(() => {

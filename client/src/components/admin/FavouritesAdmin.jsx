@@ -6,10 +6,10 @@ const FavouritesAdmin = () => {
   const [topProducts, setTopProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/favourites/customers', {
+    axios.get('http://localhost:5002/api/admin/favourites/customers', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(res => setTopCustomers(res.data || []));
-    axios.get('http://localhost:5000/api/admin/favourites/products', {
+    axios.get('http://localhost:5002/api/admin/favourites/products', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(res => setTopProducts(res.data || []));
   }, []);

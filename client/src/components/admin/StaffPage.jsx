@@ -7,7 +7,7 @@ const StaffPage = () => {
   const [form, setForm] = useState({ name: '', email: '', role: '' });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/staff', {
+    axios.get('http://localhost:5002/api/admin/staff', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(res => setStaff(res.data || []));
   }, []);
@@ -20,7 +20,7 @@ const StaffPage = () => {
   // Add staff to backend
   const handleAdd = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/staff', form, {
+      const res = await axios.post('http://localhost:5002/api/admin/staff', form, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setStaff([...staff, res.data]);
@@ -33,7 +33,7 @@ const StaffPage = () => {
   // Update staff in backend
   const handleSave = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/admin/staff/${id}`, form, {
+      const res = await axios.put(`http://localhost:5002/api/admin/staff/${id}`, form, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setStaff(staff.map(s => s._id === id ? res.data : s));
@@ -46,7 +46,7 @@ const StaffPage = () => {
   // Delete staff from backend
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/staff/${id}`, {
+      await axios.delete(`http://localhost:5002/api/admin/staff/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setStaff(staff.filter(s => s._id !== id));

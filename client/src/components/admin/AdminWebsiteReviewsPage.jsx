@@ -12,7 +12,7 @@ const AdminWebsiteReviewsPage = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/website-reviews', {
+      const res = await axios.get('http://localhost:5002/api/website-reviews', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReviews(res.data);
@@ -28,7 +28,7 @@ const AdminWebsiteReviewsPage = () => {
   const handleReply = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`http://localhost:5000/api/website-reviews/${id}/reply`, { reply }, {
+      await axios.patch(`http://localhost:5002/api/website-reviews/${id}/reply`, { reply }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Reply sent');
@@ -43,7 +43,7 @@ const AdminWebsiteReviewsPage = () => {
   const handleFeature = async (id, featured) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`http://localhost:5000/api/website-reviews/${id}/feature`, { featured }, {
+      await axios.patch(`http://localhost:5002/api/website-reviews/${id}/feature`, { featured }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchReviews();

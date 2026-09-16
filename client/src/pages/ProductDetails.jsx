@@ -18,7 +18,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`);
+        const res = await fetch(`http://localhost:5002/api/products/${id}`);
         if (!res.ok) {
           setProduct(null);
           return;
@@ -42,7 +42,7 @@ const ProductDetails = () => {
       if (!token) return; // Only track if logged in
       try {
         await axios.post(
-          `http://localhost:5000/api/auto-favourites/${id}`,
+          `http://localhost:5002/api/auto-favourites/${id}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );

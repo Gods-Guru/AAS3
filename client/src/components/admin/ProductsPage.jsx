@@ -42,7 +42,7 @@ const ProductPage = () => {
     const fetchCategories = async () => {
       try {
         // FIX: Fetch from /api/categories, not /api/products
-        const res = await axios.get('http://localhost:5000/api/categories', {
+        const res = await axios.get('http://localhost:5002/api/categories', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
@@ -63,7 +63,7 @@ const ProductPage = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/products', {
+      const res = await axios.get('http://localhost:5002/api/products', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const data = Array.isArray(res.data) ? res.data : res.data.products || [];
@@ -168,7 +168,7 @@ const ProductPage = () => {
       // Always ensure category is a string (category ID)
       formData.set('category', String(form.category));
       if (modalMode === 'add') {
-        res = await axios.post('http://localhost:5000/api/products', formData, {
+        res = await axios.post('http://localhost:5002/api/products', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -176,7 +176,7 @@ const ProductPage = () => {
         });
         setMessage({ type: 'success', text: 'Product added successfully.' });
       } else {
-        res = await axios.put(`http://localhost:5000/api/products/${editId}`, formData, {
+        res = await axios.put(`http://localhost:5002/api/products/${editId}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -204,7 +204,7 @@ const ProductPage = () => {
           if (val !== null && val !== undefined) formData.append(key, val);
         });
         formData.set('category', String(prod.category));
-        await axios.post('http://localhost:5000/api/products', formData, {
+        await axios.post('http://localhost:5002/api/products', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -235,7 +235,7 @@ const ProductPage = () => {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:5000/api/products/${deleteId}`, {
+      await axios.delete(`http://localhost:5002/api/products/${deleteId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -255,7 +255,7 @@ const ProductPage = () => {
     try {
       setLoading(true);
       const newStatus = prod.status === 'in stock' ? 'out of stock' : 'in stock';
-      await axios.patch(`http://localhost:5000/api/products/${prod._id}/status`, { status: newStatus });
+      await axios.patch(`http://localhost:5002/api/products/${prod._id}/status`, { status: newStatus });
       setMessage({ type: 'success', text: 'Status updated.' });
       fetchProducts();
     } catch (err) {

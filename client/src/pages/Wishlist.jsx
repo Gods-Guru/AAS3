@@ -28,7 +28,7 @@ const WishlistPage = () => {
       return;
     }
     axios
-      .get('http://localhost:5000/api/products')
+      .get('http://localhost:5002/api/products')
       .then((res) => {
         const allProducts = Array.isArray(res.data)
           ? res.data

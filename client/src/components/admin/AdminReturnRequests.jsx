@@ -19,7 +19,7 @@ const AdminReturnRequests = () => {
   const fetchReturns = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get('http://localhost:5000/api/returns', {
+      const { data } = await axios.get('http://localhost:5002/api/returns', {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
         },
@@ -47,7 +47,7 @@ const AdminReturnRequests = () => {
   const updateStatus = async (returnId) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/returns/${returnId}/status`,
+        `http://localhost:5002/api/returns/${returnId}/status`,
         {
           status: selectedStatus[returnId],
           adminNote: adminNotes[returnId] || '',
@@ -67,7 +67,7 @@ const AdminReturnRequests = () => {
   const markRefunded = async (returnId) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/returns/${returnId}/refund`,
+        `http://localhost:5002/api/returns/${returnId}/refund`,
         {},
         {
           headers: {
@@ -84,7 +84,7 @@ const AdminReturnRequests = () => {
   const markRestocked = async (returnId) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/returns/${returnId}/restock`,
+        `http://localhost:5002/api/returns/${returnId}/restock`,
         {},
         {
           headers: {

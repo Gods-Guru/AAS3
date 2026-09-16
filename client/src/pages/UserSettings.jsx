@@ -9,7 +9,7 @@ const UserSettings = () => {
   const handleProfileUpdate = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/users/profile', profile, {
+      await axios.put('http://localhost:5002/api/users/profile', profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Profile updated!');
@@ -21,7 +21,7 @@ const UserSettings = () => {
   const handlePasswordChange = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/users/password', password, {
+      await axios.put('http://localhost:5002/api/users/password', password, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Password changed!');
@@ -33,7 +33,7 @@ const UserSettings = () => {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete('http://localhost:5000/api/users/delete', {
+      await axios.delete('http://localhost:5002/api/users/delete', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Account deleted!');

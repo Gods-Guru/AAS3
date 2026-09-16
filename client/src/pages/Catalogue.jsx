@@ -41,7 +41,7 @@ const CatalogPage = () => {
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/categories')
+    axios.get('http://localhost:5002/api/categories')
       .then((res) => {
         if (Array.isArray(res.data)) {
           setCategories(res.data);
@@ -65,7 +65,7 @@ const CatalogPage = () => {
     if (maxPrice) params.append('maxPrice', maxPrice);
     if (inStock) params.append('inStock', true);
 
-    axios.get(`http://localhost:5000/api/products`, { params })
+    axios.get(`http://localhost:5002/api/products`, { params })
       .then((res) => {
         let allProducts = [];
         if (Array.isArray(res.data)) {
@@ -143,7 +143,7 @@ const CatalogPage = () => {
     setSelectedProduct(product);
     const token = localStorage.getItem('token');
     axios.post(
-    `http://localhost:5000/api/views/${product._id}`,
+    `http://localhost:5002/api/views/${product._id}`,
     {},
     token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
   ).catch(() => {});
@@ -162,7 +162,7 @@ const CatalogPage = () => {
         setWishlistAlertMsg('Item has been removed from wishlist');
         setShowWishlistAlert(true);
         setTimeout(() => setShowWishlistAlert(false), 2000);
-        axios.delete(`http://localhost:5000/api/wishlist/${productId}`, {
+        axios.delete(`http://localhost:5002/api/wishlist/${productId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {});
       } else {
@@ -170,7 +170,7 @@ const CatalogPage = () => {
         setWishlistAlertMsg('Item has been added to wishlist.');
         setShowWishlistAlert(true);
         setTimeout(() => setShowWishlistAlert(false), 2000);
-        axios.post(`http://localhost:5000/api/wishlist`, { productId }, {
+        axios.post(`http://localhost:5002/api/wishlist`, { productId }, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {});
       }
@@ -188,7 +188,7 @@ const CatalogPage = () => {
         setWishlistAlertMsg('Item has been removed from favourites');
         setShowWishlistAlert(true);
         setTimeout(() => setShowWishlistAlert(false), 2000);
-        axios.delete(`http://localhost:5000/api/favourites/${productId}`, {
+        axios.delete(`http://localhost:5002/api/favourites/${productId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {});
       } else {
@@ -196,7 +196,7 @@ const CatalogPage = () => {
         setWishlistAlertMsg('Item has been added to favourites');
         setShowWishlistAlert(true);
         setTimeout(() => setShowWishlistAlert(false), 2000);
-        axios.post(`http://localhost:5000/api/favourites`, { productId }, {
+        axios.post(`http://localhost:5002/api/favourites`, { productId }, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => {});
       }

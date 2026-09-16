@@ -156,7 +156,7 @@ const WelcomePage = () => {
   // Fetch products with error boundary
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/products", {
+      const res = await axios.get("http://localhost:5002/api/products", {
         timeout: 5000,
       });
       setProducts(Array.isArray(res.data) ? res.data : res.data.products || []);

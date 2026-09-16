@@ -21,7 +21,7 @@ const OrderCard = ({ order, onStatusChange, onPaidChange, onDeliveredChange }) =
     setLoadingStatus(true);
     setError(null);
     try {
-      await axios.patch(`http://localhost:5000/api/orders/${order._id}/status`, { status: newStatus },
+      await axios.patch(`http://localhost:5002/api/orders/${order._id}/status`, { status: newStatus },
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -72,7 +72,7 @@ const OrderCard = ({ order, onStatusChange, onPaidChange, onDeliveredChange }) =
     setLoadingDelivered(true);
     setError(null);
     try {
-        await axios.patch(`http://localhost:5000/api/orders/${order._id}/deliver`, {}, 
+        await axios.patch(`http://localhost:5002/api/orders/${order._id}/deliver`, {},
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
